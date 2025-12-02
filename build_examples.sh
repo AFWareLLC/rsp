@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Delete generated test data (if available)
-rm -rf /tmp/wsp_example.bin
+# Delete generated test data
+rm -rf /tmp/rsp_example.bin
 
 clang++ -std=c++23 -Wall -Wextra -Werror -pedantic -Iinclude/ examples/simple.cpp -o bin/simple -DRSP_ENABLE
 clang++ -std=c++23 -Wall -Wextra -Werror -pedantic -Iinclude/ examples/threaded.cpp -o bin/threaded -DRSP_ENABLE
