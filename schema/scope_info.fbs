@@ -1,0 +1,34 @@
+namespace RSP;
+
+// Metadata type enum
+enum MetadataType:byte {
+  UNSET = 0,
+  INT8,
+  UINT8,
+  INT16,
+  UINT16,
+  INT32,
+  UINT32,
+  INT64,
+  UINT64,
+  FLOAT,
+  DOUBLE
+}
+
+table MetadataEntry {
+  tag: string;        // metadata name
+  type: MetadataType;  // type of value
+  value: ulong;        // 8-byte payload
+}
+
+table ScopeInfo {
+  tag: string;
+  ticks_start: ulong;
+  ticks_end: ulong;
+  machine_nominal_freq_hz: ulong;
+  max_buffer_size: ulong;
+  max_offset:ubyte;
+  metadata:[MetadataEntry];
+}
+
+root_type ScopeInfo;

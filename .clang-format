@@ -1,0 +1,15 @@
+BasedOnStyle: Google
+SortIncludes: false
+AccessModifierOffset: -2
+AlignAfterOpenBracket: Align
+AllowShortBlocksOnASingleLine: false
+AllowShortFunctionsOnASingleLine: false
+BinPackArguments: false
+BinPackParameters: false
+ColumnLimit: 120
+AlignConsecutiveAssignments: true
+FixNamespaceComments: true
+ReferenceAlignment: Right
+PointerAlignment: Right
+BraceWrapping:
+  AfterControlStatement: Always
