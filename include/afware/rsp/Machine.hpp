@@ -20,6 +20,10 @@
 
 #include "Machine_AMD64.hpp"
 
+#elif defined(__aarch64__) || defined(_M_ARM64)
+
+#include "Machine_ARM64.hpp"
+
 #else
 
 #error "Arch is not supported!"
