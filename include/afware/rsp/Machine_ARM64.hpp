@@ -16,59 +16,56 @@
 
 #pragma once
 
-#include <chrono>
 #include <cstdint>
-#include <fstream>
-#include <thread>
-
-//
-// This is ARM64-specific machine support code.
-// Assumptions made:
-// - Compiler supports inline
-// - CNTVCT_EL0 is available
-// - We treat CNTVCT as the equivalent of the invariant TSC.
-//
+#include <ctime>
 
 namespace rsp {
+//
+// ARM64 time source: CLOCK_MONOTONIC_RAW
+//
+// This is the best way to approach this for ARM, since the counters
+// are typically privledged and aren't userspace accessible.
+//
+// This is a stable, non-adjusted, high-resolution clock exposed by
+// the Linux VDSO. It is much faster than a syscall and does *not*
+// slew or jump due to NTP.
+//
 
 inline uint64_t Now() {
-  uint64_t val;
-  asm volatile("isb; mrs %0, cntvct_el0" : "=r"(val));
-  return val;
+  struct timespec ts;
+  clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
+  return uint64_t(ts.tv_sec) * 1'000'000'000ull + uint64_t(ts.tv_nsec);
 }
+
+//
+// Nominal frequency:
+// Since Now() returns nanoseconds, the "frequency" is fixed at 1e9 Hz.
+//
 
 inline uint64_t GetNominalFreq() {
-  uint64_t freq;
-  asm volatile("isb; mrs %0, cntfrq_el0" : "=r"(freq));
-  return freq;
+  return 1'000'000'000ull;  // nanosecond resolution
 }
 
 //
-// This is the final abstraction of the machine - which gets instantiated by the
-// profiler on startup. The bits and pieces if provides access to are needed to
-// compute accurate timings from the TSC.
-//
-// This more or less glues together all the machine specific nonsense above
-// to give a nominal TSC frequency estimate and provide an indication
-// that we have the correct hardware to profile successfully.
+// ARM64 Machine abstraction
 //
 
 class Machine {
 public:
   Machine() {
-    nominal_freq_ = GetNominalFreq();
+    nominal_hz_ = GetNominalFreq();
   }
 
   bool OK() const {
-    return (nominal_freq_ != 0);
+    return nominal_hz_ != 0;
   }
 
   uint64_t GetNominalFreq() const {
-    return nominal_freq_;
+    return nominal_hz_;
   }
 
 private:
-  uint64_t nominal_freq_ = 0;
+  uint64_t nominal_hz_ = 0;
 };
 
 }  // namespace rsp
