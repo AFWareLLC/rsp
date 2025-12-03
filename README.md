@@ -49,9 +49,12 @@ analysis. These will be added shortly.
 
 - AMD64 CPU with invariant TSC. We do not support "varying" TSCs - this should not be
   an issue for most modern chips.
-- Recent compiler supporting modern C++ standards (clang 18 or newer is recommended, as is `-std=c++23`).
+- ARM64 chip. We use the CLOCK_MONOTONIC_RAW as the time source, as the hardware
+  counters are typically not readable from userspace.
+- Recent compiler supporting modern C++ standards (clang 18 or newer is recommended, as is `-std=c++23`, but `-std=c++17` works).
 - (For now) Linux only
-- `#include <flatbuffers/flatbuffers.h>` is needed, but `flatc` is only needed if you change the format definitions.
+- `#include <flatbuffers/flatbuffers.h>` is needed, but `flatc` is only needed if you change the format definitions. You might
+   need to recompile the flatbuffer schema to match your version fo flatbuffers: see `build_flatbuffers.sh`.
 
 ## A brief introduction
 
