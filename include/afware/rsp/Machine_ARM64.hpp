@@ -38,34 +38,21 @@ inline uint64_t Now() {
 }
 
 //
-// Nominal frequency:
-// Since Now() returns nanoseconds, the "frequency" is fixed at 1e9 Hz.
-//
-
-inline uint64_t GetNominalFreq() {
-  return 1'000'000'000ull;  // nanosecond resolution
-}
-
-//
 // ARM64 Machine abstraction
 //
 
 class Machine {
 public:
   Machine() {
-    nominal_hz_ = GetNominalFreq();
   }
 
   bool OK() const {
-    return nominal_hz_ != 0;
+    return true;
   }
 
   uint64_t GetNominalFreq() const {
-    return nominal_hz_;
+    return 1'000'000'000ull;  // nanosecond resolution
   }
-
-private:
-  uint64_t nominal_hz_ = 0;
 };
 
 }  // namespace rsp
