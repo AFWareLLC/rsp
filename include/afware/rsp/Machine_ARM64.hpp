@@ -60,7 +60,7 @@ public:
   }
 
   bool OK() const {
-    (nominal_freq_ != 0);
+    return (nominal_freq_ != 0);
   }
 
   uint64_t GetNominalFreq() const {
