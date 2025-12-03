@@ -18,6 +18,7 @@
 
 #include "ConstexprString.hpp"
 
+#include <array>
 #include <cstring>
 
 namespace rsp {
