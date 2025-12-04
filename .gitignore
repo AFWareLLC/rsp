@@ -355,3 +355,4 @@ bin/threaded
 bin/simple
 bin/disk_consumer
 bin/disk_producer
+bin/rsp

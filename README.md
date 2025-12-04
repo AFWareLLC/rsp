@@ -29,9 +29,8 @@ precise, targeted measurements—rather than broad, system-wide
 tracing. It excels at focused, low-overhead profiling, though it
 performs adequately for more general workloads as well.
 
-NOTE: We have a set of companion CLI tools that we are working to
-extricate from our infrastructure that perform a lot of common
-analysis. These will be added shortly.
+Included in the cli directory, is a standalone binary that can be
+built with some  common analysis functions. See `cli/README.md`.
 
 ## Features
 
