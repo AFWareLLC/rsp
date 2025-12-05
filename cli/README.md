@@ -5,13 +5,16 @@ more that still needs to come across from our internal repo, but this is a prett
 
 ## Building
 
-To build it: `./build_cli.sh` from the top-level directory. You need to have a `golang` toolchain available and on `$PATH`.
-The `go` build will bring in any dependencies that are needed.
+To build it: `./build_cli.sh` (for Linux, macOS) or
+`.\build_cli_nt.bat` (for Windows) from the top-level directory. You
+need to have a `golang` toolchain available and on `$PATH`.  The `go`
+build will bring in any dependencies that are needed.
 
-The nice thing about the `go` binary is that it's portable: you can build it once and copy it to different machines as needed
-without needing to worry about dependencies (provided it's the same OS and arch, of course).
+The nice thing about the `go` binary is that it's portable: you can
+build it once and copy it to different machines as needed without
+needing to worry about dependencies (provided it's the same OS and
+arch, of course).
 
-The cli should also build on macOS and Windows - though this isn't tested.
 
 The `rsp` binary will be in the `bin/` directory at the top of the project. Copy it somewhere convenient and make sure it's on your `$PATH`.
 
@@ -58,7 +61,7 @@ OPTIONS:
    --help, -h  show help
 ```
 
-### 'scopes' subcommand
+### `scopes` subcommand
 
 ```
 NAME:
