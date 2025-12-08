@@ -16,14 +16,14 @@
 
 #pragma once
 
-#include <cstdint>
+#include <cstddef>
 
 namespace rsp {
 
-template <std::size_t MaxLength>
+template <size_t MaxLength>
 struct ConstexprString {
   char data[MaxLength] = {};
-  std::size_t size     = 0;
+  size_t size          = 0;
 
   constexpr ConstexprString(const char *s) {
     size = 0;
