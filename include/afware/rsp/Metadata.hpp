@@ -74,73 +74,73 @@ struct MetadataEntry {
 };
 
 template <typename T>
-MetadataEntry MakeScopeMetadata(MetadataTag tag, T val);
+inline MetadataEntry MakeScopeMetadata(MetadataTag tag, T val);
 
 template <>
-MetadataEntry MakeScopeMetadata(MetadataTag tag, uint8_t val) {
+inline MetadataEntry MakeScopeMetadata(MetadataTag tag, uint8_t val) {
   MetadataEntry entry{tag, MetadataType::UINT8};
   std::memcpy(entry.data.data(), &val, sizeof(uint8_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<int8_t>(MetadataTag tag, int8_t val) {
+inline MetadataEntry MakeScopeMetadata<int8_t>(MetadataTag tag, int8_t val) {
   MetadataEntry entry{tag, MetadataType::INT8};
   std::memcpy(entry.data.data(), &val, sizeof(int8_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<uint16_t>(MetadataTag tag, uint16_t val) {
+inline MetadataEntry MakeScopeMetadata<uint16_t>(MetadataTag tag, uint16_t val) {
   MetadataEntry entry{tag, MetadataType::UINT16};
   std::memcpy(entry.data.data(), &val, sizeof(uint16_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<int16_t>(MetadataTag tag, int16_t val) {
+inline MetadataEntry MakeScopeMetadata<int16_t>(MetadataTag tag, int16_t val) {
   MetadataEntry entry{tag, MetadataType::INT16};
   std::memcpy(entry.data.data(), &val, sizeof(int16_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<uint32_t>(MetadataTag tag, uint32_t val) {
+inline MetadataEntry MakeScopeMetadata<uint32_t>(MetadataTag tag, uint32_t val) {
   MetadataEntry entry{tag, MetadataType::UINT32};
   std::memcpy(entry.data.data(), &val, sizeof(uint32_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<int32_t>(MetadataTag tag, int32_t val) {
+inline MetadataEntry MakeScopeMetadata<int32_t>(MetadataTag tag, int32_t val) {
   MetadataEntry entry{tag, MetadataType::INT32};
   std::memcpy(entry.data.data(), &val, sizeof(int32_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<uint64_t>(MetadataTag tag, uint64_t val) {
+inline MetadataEntry MakeScopeMetadata<uint64_t>(MetadataTag tag, uint64_t val) {
   MetadataEntry entry{tag, MetadataType::UINT64};
   std::memcpy(entry.data.data(), &val, sizeof(uint64_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<int64_t>(MetadataTag tag, int64_t val) {
+inline MetadataEntry MakeScopeMetadata<int64_t>(MetadataTag tag, int64_t val) {
   MetadataEntry entry{tag, MetadataType::INT64};
   std::memcpy(entry.data.data(), &val, sizeof(int64_t));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<float>(MetadataTag tag, float val) {
+inline MetadataEntry MakeScopeMetadata<float>(MetadataTag tag, float val) {
   MetadataEntry entry{tag, MetadataType::FLOAT};
   std::memcpy(entry.data.data(), &val, sizeof(float));
   return entry;
 }
 
 template <>
-MetadataEntry MakeScopeMetadata<double>(MetadataTag tag, double val) {
+inline MetadataEntry MakeScopeMetadata<double>(MetadataTag tag, double val) {
   MetadataEntry entry{tag, MetadataType::DOUBLE};
   std::memcpy(entry.data.data(), &val, sizeof(double));
   return entry;
