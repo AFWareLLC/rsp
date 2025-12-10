@@ -19,3 +19,4 @@
 #define MOODYCAMEL_EXCEPTIONS_ENABLED
 
 #include "third_party/concurrentqueue.h"
+#include "third_party/blockingconcurrentqueue.h"
