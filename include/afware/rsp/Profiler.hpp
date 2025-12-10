@@ -105,6 +105,10 @@ public:
   }
 
   void Add(ScopeInfo scope_info) {
+    if (stop_) {
+      return;
+    }
+
     queue_.enqueue(std::move(scope_info));
   }
 
