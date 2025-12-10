@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <thread>
+#include <utility>
 #include <vector>
 
 //
@@ -22,14 +23,14 @@ void worker(int num) {
 }
 
 int main() {
-  if (rsp::ProfilingAvailable()) {
+  if (rsp::Available()) {
     std::cout << "Profiling enabled.\n";
-    rsp::RSPInstance().SetSinkToCout();
+    rsp::Instance().SetSinkToCout();
   } else {
     std::cout << "Profiling not available\n";
   }
 
-  if (rsp::StartProfiling()) {
+  if (rsp::Start()) {
     std::cout << "Profiling started.\n";
   }
 
@@ -41,6 +42,8 @@ int main() {
   for (auto &t : threads) {
     t.join();
   }
+
+  rsp::Stop();
 
   return 0;
 }

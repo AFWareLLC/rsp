@@ -46,13 +46,13 @@ long double borwein_quartic_pi(int iterations) {
 }  // namespace pi
 
 int main() {
-  if (rsp::ProfilingAvailable()) {
+  if (rsp::Available()) {
     std::cout << "Profiling enabled.\n";
   } else {
     std::cout << "Profiling unavailable.\n";
   }
 
-  if (rsp::StartProfiling()) {
+  if (rsp::Start()) {
     std::cout << "Profiling started.\n";
   }
 
@@ -86,6 +86,8 @@ int main() {
   std::chrono::duration<double> elapsed = end - start;
 
   std::cout << "Time doing actual work: " << elapsed.count() << " seconds\n";
+
+  rsp::Stop();
 
   return 0;
 }

@@ -29,16 +29,16 @@
 
 namespace rsp {
 
-inline bool ProfilingAvailable() {
-  return RSPInstance().Ready();
+inline bool Available() {
+  return Instance().Ready();
 }
 
-inline bool StartProfiling() {
-  return RSPInstance().Start();
+inline bool Start() {
+  return Instance().Start();
 }
 
-inline void StopProfiling() {
-  RSPInstance().Stop();
+inline void Stop() {
+  Instance().Stop();
 }
 
 }  // namespace rsp
@@ -50,15 +50,15 @@ inline void StopProfiling() {
 
 namespace rsp {
 
-inline bool ProfilingAvailable() {
+inline bool Available() {
   return false;
 }
 
-inline bool StartProfiling() {
+inline bool Start() {
   return false;
 }
 
-inline void StopProfiling() {
+inline void Stop() {
   return;
 }
 

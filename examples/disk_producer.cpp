@@ -4,16 +4,16 @@
 #include <iostream>
 
 int main() {
-  if (rsp::ProfilingAvailable()) {
+  if (rsp::Available()) {
     std::cout << "Profiling enabled.\n";
 
     auto sink_ptr = rsp::Profiler::CreateBinaryDiskSink("/tmp/rsp_example.bin");
-    rsp::RSPInstance().SetSinkToBinaryDisk(sink_ptr);
+    rsp::Instance().SetSinkToBinaryDisk(sink_ptr);
   } else {
     std::cout << "Profiling not available\n";
   }
 
-  if (rsp::StartProfiling()) {
+  if (rsp::Start()) {
     std::cout << "Profiling started.\n";
   }
 
@@ -23,6 +23,8 @@ int main() {
   }
 
   std::cout << "Done\n";
+
+  rsp::Stop();
 
   return 0;
 }

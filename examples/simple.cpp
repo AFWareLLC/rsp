@@ -16,14 +16,14 @@
 //
 
 int main() {
-  if (rsp::ProfilingAvailable()) {
+  if (rsp::Available()) {
     std::cout << "Profiling enabled.\n";
-    rsp::RSPInstance().SetSinkToCout();
+    rsp::Instance().SetSinkToCout();
   } else {
     std::cout << "Profiling not available\n";
   }
 
-  if (rsp::StartProfiling()) {
+  if (rsp::Start()) {
     std::cout << "Profiling started.\n";
   }
 
@@ -43,6 +43,8 @@ int main() {
 
     RSP_SCOPE_METADATA("Some value 1", std::uint8_t{255});
   }
+
+  rsp::Stop();
 
   return 0;
 }
