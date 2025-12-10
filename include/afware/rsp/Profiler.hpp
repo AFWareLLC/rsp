@@ -74,7 +74,7 @@ using SlotStorage = MetadataSlotStorage<RSP_PROFILER_DEFAULT_STORAGE_SLOTS>;
 //
 
 class Profiler;
-Profiler &RSPInstance();
+Profiler &Instance();
 
 class Profiler {
   using SinkFunc      = std::function<void(const ScopeInfo &)>;
@@ -144,7 +144,7 @@ public:
   }
 
   static std::shared_ptr<BinaryDiskSink> CreateBinaryDiskSink(const std::filesystem::path &path) {
-    return std::make_shared<BinaryDiskSink>(path, RSPInstance().GetMachine());
+    return std::make_shared<BinaryDiskSink>(path, Instance().GetMachine());
   }
 
   SlotStorage *GetSlotStorage() {
@@ -219,7 +219,7 @@ private:
   std::thread sink_thread_;
   std::atomic<bool> stop_ = false;
 
-  friend Profiler &RSPInstance();
+  friend Profiler &Instance();
 };
 
 //
@@ -227,7 +227,7 @@ private:
 // will manage scope output from ALL threads.
 //
 
-inline Profiler &RSPInstance() {
+inline Profiler &Instance() {
   static Profiler instance;
   return instance;
 }
@@ -310,7 +310,7 @@ public:
   // only after we've set ourselves up to keep our operations out of the timing scope.
   //
   ActiveScope(const char *name) : info(name) {
-    info.metadata_ptr = RSPInstance().GetSlotStorage()->Acquire();
+    info.metadata_ptr = Instance().GetSlotStorage()->Acquire();
     GetScopeManager()->Push(this);
 
     info.ticks_start = Now();
@@ -323,7 +323,7 @@ public:
 
   ~ActiveScope() {
     info.ticks_end = Now();
-    RSPInstance().Add(info);
+    Instance().Add(info);
     GetScopeManager()->Pop();
   }
 

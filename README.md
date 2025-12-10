@@ -53,7 +53,7 @@ built with some  common analysis functions. See `cli/README.md`.
 - Recent compiler supporting modern C++ standards (clang 18 or newer is recommended, as is `-std=c++23`, but `-std=c++17` works).
 - (For now) Linux only
 - `#include <flatbuffers/flatbuffers.h>` is needed, but `flatc` is only needed if you change the format definitions. You might
-   need to recompile the flatbuffer schema to match your version fo flatbuffers: see `build_flatbuffers.sh`.
+   need to recompile the flatbuffer schema to match your version fo flatbuffers: see `build_flatbuffers.sh`. The version of Flatbuffers in use by us is `25.2.10` but any recent version should be OK.
 
 ## A brief introduction
 
@@ -75,9 +75,9 @@ In your `main()` somewhere, you should then add something like this:
 // that the CPU met the appropriate requirements.
 //
 
-if (rsp::ProfilingAvailable()) {
+if (rsp::Available()) {
     auto sink_ptr = rsp::Profiler::CreateBinaryDiskSink("/path/to/profiling/output/on/disk");
-    rsp::RSPInstance().SetSinkToBinaryDisk(sink_ptr);
+    rsp::Instance().SetSinkToBinaryDisk(sink_ptr);
 	
 
 	//
@@ -87,12 +87,30 @@ if (rsp::ProfilingAvailable()) {
 	// - The aggregation/sinking thread has started
 	//
 
-	if (!rsp::StartProfiling()) {
+	if (!rsp::Start()) {
 		throw std::runtime_error("Could not start profiling!");
 	}
 }
 
+//
+// Do work...
+//
+// And then at the very end:
+//
+
+rsp::Stop();
+
 ```
+
+The `rsp::Start()` function will spin up the I/O thread and allow events to be queued. It will return
+`true` if everything started succesfully. If `rsp::Available()` is true, and you don't call `rsp::Start()` - that's ok, it's just nothing will be queued as the I/O thread has not started and the queueing 
+is gated upon the thread being up and running. It will be a little wasteful as scope events will be
+created but never queued - but not awful.
+
+The `rsp::Stop()` function doesn't simply prevent collection from occurring - it will also
+stop the I/O thread (which is not free).
+
+In most cases, you should call `rsp::Start()` near the beginning of your program, and `rsp::Stop()` somewhere toward the end. Since they aren't free - think carefully about where you call them.
 
 Your first profiling operation might look like:
 
