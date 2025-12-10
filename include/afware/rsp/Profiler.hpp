@@ -49,6 +49,13 @@ namespace rsp {
 #define RSP_PROFILER_DEFAULT_STORAGE_SLOTS 1024
 #endif
 
+//
+// This controls how long we wait/block for on item de-queue.
+//
+#if !defined(RSP_PROFILER_DEQUEUE_WAIT_MS)
+#define RSP_PROFILER_DEQUEUE_WAIT_MS 10
+#endif
+
 using SlotStorage = MetadataSlotStorage<RSP_PROFILER_DEFAULT_STORAGE_SLOTS>;
 
 //
@@ -71,7 +78,7 @@ Profiler &RSPInstance();
 
 class Profiler {
   using SinkFunc      = std::function<void(const ScopeInfo &)>;
-  using ProfilerQueue = moodycamel::ConcurrentQueue<ScopeInfo>;
+  using ProfilerQueue = moodycamel::BlockingConcurrentQueue<ScopeInfo>;
 
 public:
   Profiler(const Profiler &)            = delete;
@@ -159,11 +166,9 @@ private:
     sink_thread_ = std::thread([this]() {
       while (!stop_) {
         ScopeInfo info = ScopeInfo::Blank();
-        if (queue_.try_dequeue(info)) {
+        if (queue_.wait_dequeue_timed(info, std::chrono::milliseconds(RSP_PROFILER_DEQUEUE_WAIT_MS))) {
           sink_(info);
           GetSlotStorage()->Release(info.metadata_ptr);
-        } else {
-          std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
       }
 
