@@ -53,7 +53,7 @@ namespace rsp {
 // This controls how long we wait/block for on item de-queue.
 //
 #if !defined(RSP_PROFILER_DEQUEUE_WAIT_MS)
-#define RSP_PROFILER_DEQUEUE_WAIT_MS 50
+#define RSP_PROFILER_DEQUEUE_WAIT_MS 10
 #endif
 
 using SlotStorage = MetadataSlotStorage<RSP_PROFILER_DEFAULT_STORAGE_SLOTS>;
