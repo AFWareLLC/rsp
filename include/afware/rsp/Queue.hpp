@@ -18,5 +18,14 @@
 
 #define MOODYCAMEL_EXCEPTIONS_ENABLED
 
+#ifndef RSP_NO_INCLUDED_MOODYCAMEL_QUEUES
+
 #include "third_party/concurrentqueue.h"
 #include "third_party/blockingconcurrentqueue.h"
+
+#else
+
+#include <concurrentqueue.h>
+#include <blockingconcurrentqueue.h>
+
+#endif
