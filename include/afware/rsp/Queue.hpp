@@ -25,7 +25,7 @@
 
 #else
 
-#include <concurrentqueue.h>
-#include <blockingconcurrentqueue.h>
+#include "concurrentqueue.h"
+#include "blockingconcurrentqueue.h"
 
 #endif
