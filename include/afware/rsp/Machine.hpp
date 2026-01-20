@@ -20,12 +20,12 @@
 
 #include "Machine_AMD64.hpp"
 
-#elif defined(__aarch64__) || defined(_M_ARM64)
+#elif defined(__aarch64__) || defined(_M_ARM64) && defined(__linux__)
 
 #include "Machine_ARM64.hpp"
 
 #else
 
-#error "Arch is not supported!"
+#error "rsp: unsupported platform (need Linux + amd64 or Linux + arm64)"
 
 #endif
