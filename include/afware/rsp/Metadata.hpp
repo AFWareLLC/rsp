@@ -118,11 +118,19 @@ inline MetadataEntry MakeScopeMetadata<int32_t>(MetadataTag tag, int32_t val) {
   return entry;
 }
 
+
+
 template <>
 inline MetadataEntry MakeScopeMetadata<uint64_t>(MetadataTag tag, uint64_t val) {
   MetadataEntry entry{tag, MetadataType::UINT64};
   std::memcpy(entry.data.data(), &val, sizeof(uint64_t));
   return entry;
+}
+
+template <>
+inline MetadataEntry MakeScopeMetadata<unsigned long>(MetadataTag tag, unsigned long val) {
+  static_assert(sizeof(unsigned long) == sizeof(uint64_t));
+  return MakeScopeMetadata<uint64_t>(tag, static_cast<uint64_t>(val));
 }
 
 template <>
