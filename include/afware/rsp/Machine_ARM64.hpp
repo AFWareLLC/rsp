@@ -58,14 +58,9 @@ inline uint64_t Now() {
 
 inline uint64_t ARM64_ReadCntfrqHz() {
   uint64_t hz = 0;
-  __asm__ __volatile__(
-      "mrs %0, cntfrq_el0"
-      : "=r"(hz)
-      :
-      : "memory");
+  __asm__ __volatile__("mrs %0, cntfrq_el0" : "=r"(hz) : : "memory");
   return hz;
 }
-
 
 //
 // Best-effort "can we use this clock source?" check.
@@ -96,7 +91,7 @@ class Machine {
 public:
   Machine() {
     nominal_cnt_hz_ = ARM64_ReadCntfrqHz();
-    ok_ = ARM64_CounterLooksSane(nominal_cnt_hz_);
+    ok_             = ARM64_CounterLooksSane(nominal_cnt_hz_);
   }
 
   bool OK() const {
@@ -108,9 +103,8 @@ public:
   }
 
 private:
-  bool ok_               = false;
+  bool ok_                 = false;
   uint64_t nominal_cnt_hz_ = 0;
 };
-
 
 }  // namespace rsp
