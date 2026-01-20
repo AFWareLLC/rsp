@@ -46,10 +46,11 @@
                 exit 1
               fi
 
-              echo "clang-format: formatting ./include (excluding third_party)..."
+              echo "clang-format: formatting ./include..."
 
               find include \
                 -path include/afware/rsp/third_party -prune -o \
+                -name scope_info_generated.h -prune -o \
                 -type f \
                 \( -name '*.h' -o -name '*.hh' -o -name '*.hpp' -o -name '*.hxx' -o -name '*.inc' \
                    -o -name '*.c' -o -name '*.cc' -o -name '*.cpp' -o -name '*.cxx' \) \
