@@ -23,7 +23,7 @@
 
 #define RSP_SCOPE_METADATA_IMPL(TAG_STR, VALUE)                      \
   do {                                                               \
-    auto* current = ::rsp::GetScopeManager()->Current();             \
+    auto *current = ::rsp::GetScopeManager()->Current();             \
     if (current) {                                                   \
       current->info.AddMetadata(::rsp::MetadataTag(TAG_STR), VALUE); \
     }                                                                \

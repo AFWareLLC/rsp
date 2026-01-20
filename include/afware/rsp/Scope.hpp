@@ -51,7 +51,7 @@ struct ScopeInfo {
   uint64_t ticks_start;
   uint64_t ticks_end;
 
-  MetadataSlot* metadata_ptr = nullptr;
+  MetadataSlot *metadata_ptr = nullptr;
 
   constexpr ScopeInfo(ScopeTag t) : tag(t) {
   }
@@ -69,15 +69,15 @@ struct ScopeInfo {
     return ScopeInfo{ScopeTag{"DEFAULT"}};
   }
 
-  ScopeInfo(const ScopeInfo&)            = default;
-  ScopeInfo& operator=(const ScopeInfo&) = default;
+  ScopeInfo(const ScopeInfo &)            = default;
+  ScopeInfo &operator=(const ScopeInfo &) = default;
 };
 
 //
 // Streaming operators/helpers.
 //
 
-inline const char* MetadataTypeToString(MetadataType type) {
+inline const char *MetadataTypeToString(MetadataType type) {
   switch (type) {
     case MetadataType::UNSET:
       return "UNSET";
@@ -106,38 +106,38 @@ inline const char* MetadataTypeToString(MetadataType type) {
   }
 }
 
-inline std::ostream& operator<<(std::ostream& os, const MetadataEntry& m) {
+inline std::ostream &operator<<(std::ostream &os, const MetadataEntry &m) {
   os << m.tag.c_str() << "=" << MetadataTypeToString(m.type) << ": ";
   switch (m.type) {
     case MetadataType::INT8:
-      os << +(*reinterpret_cast<const int8_t*>(m.data.data()));
+      os << +(*reinterpret_cast<const int8_t *>(m.data.data()));
       break;
     case MetadataType::UINT8:
-      os << +(*reinterpret_cast<const uint8_t*>(m.data.data()));
+      os << +(*reinterpret_cast<const uint8_t *>(m.data.data()));
       break;
     case MetadataType::INT16:
-      os << *reinterpret_cast<const int16_t*>(m.data.data());
+      os << *reinterpret_cast<const int16_t *>(m.data.data());
       break;
     case MetadataType::UINT16:
-      os << *reinterpret_cast<const uint16_t*>(m.data.data());
+      os << *reinterpret_cast<const uint16_t *>(m.data.data());
       break;
     case MetadataType::INT32:
-      os << *reinterpret_cast<const int32_t*>(m.data.data());
+      os << *reinterpret_cast<const int32_t *>(m.data.data());
       break;
     case MetadataType::UINT32:
-      os << *reinterpret_cast<const uint32_t*>(m.data.data());
+      os << *reinterpret_cast<const uint32_t *>(m.data.data());
       break;
     case MetadataType::INT64:
-      os << *reinterpret_cast<const int64_t*>(m.data.data());
+      os << *reinterpret_cast<const int64_t *>(m.data.data());
       break;
     case MetadataType::UINT64:
-      os << *reinterpret_cast<const uint64_t*>(m.data.data());
+      os << *reinterpret_cast<const uint64_t *>(m.data.data());
       break;
     case MetadataType::FLOAT:
-      os << *reinterpret_cast<const float*>(m.data.data());
+      os << *reinterpret_cast<const float *>(m.data.data());
       break;
     case MetadataType::DOUBLE:
-      os << *reinterpret_cast<const double*>(m.data.data());
+      os << *reinterpret_cast<const double *>(m.data.data());
       break;
     default:
       os << "(unset)";
@@ -146,11 +146,11 @@ inline std::ostream& operator<<(std::ostream& os, const MetadataEntry& m) {
   return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const ScopeInfo& s) {
+inline std::ostream &operator<<(std::ostream &os, const ScopeInfo &s) {
   os << "Scope[" << s.tag.c_str() << "] "
      << "ticks_start=" << s.ticks_start << " ticks_end=" << s.ticks_end << " metadata={";
   bool first = true;
-  for (const auto& m : s.metadata_ptr->metadata) {
+  for (const auto &m : s.metadata_ptr->metadata) {
     if (m.type != MetadataType::UNSET) {
       if (!first) os << ", ";
       os << m;

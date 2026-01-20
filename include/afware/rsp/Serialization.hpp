@@ -29,7 +29,7 @@
 
 namespace rsp {
 
-inline flatbuffers::DetachedBuffer SerializeScopeInfo(const ScopeInfo* scope_info, Machine* machine) {
+inline flatbuffers::DetachedBuffer SerializeScopeInfo(const ScopeInfo *scope_info, Machine *machine) {
   flatbuffers::FlatBufferBuilder builder;
 
   auto tag_offset = builder.CreateString(scope_info->tag.c_str());
@@ -37,7 +37,7 @@ inline flatbuffers::DetachedBuffer SerializeScopeInfo(const ScopeInfo* scope_inf
   std::vector<flatbuffers::Offset<RSP::MetadataEntry>> metadata_offsets;
   uint8_t max_offset = scope_info->metadata_ptr->metadata_idx;
   for (uint8_t i = 0; i < max_offset; ++i) {
-    const auto& m = scope_info->metadata_ptr->metadata[i];
+    const auto &m = scope_info->metadata_ptr->metadata[i];
 
     uint64_t value = 0;
     std::memcpy(&value, m.data.data(), sizeof(uint64_t));
@@ -62,13 +62,13 @@ inline flatbuffers::DetachedBuffer SerializeScopeInfo(const ScopeInfo* scope_inf
   return builder.Release();
 }
 
-inline std::ostream& operator<<(std::ostream& os, const RSP::MetadataEntry& m) {
+inline std::ostream &operator<<(std::ostream &os, const RSP::MetadataEntry &m) {
   os << "{tag=" << (m.tag() ? m.tag()->c_str() : "<null>") << ", type=" << static_cast<int>(m.type())
      << ", value=" << m.value() << "}";
   return os;
 }
 
-inline std::ostream& operator<<(std::ostream& os, const RSP::ScopeInfo* scope) {
+inline std::ostream &operator<<(std::ostream &os, const RSP::ScopeInfo *scope) {
   if (!scope) return os;
 
   os << "Scope[" << (scope->tag() ? scope->tag()->c_str() : "<null>") << "] " << "ticks_start=" << scope->ticks_start()
@@ -79,7 +79,7 @@ inline std::ostream& operator<<(std::ostream& os, const RSP::ScopeInfo* scope) {
   auto metadata_vec = scope->metadata();
   if (metadata_vec) {
     for (uint32_t i = 0; i < metadata_vec->size(); ++i) {
-      const RSP::MetadataEntry* m_ptr = metadata_vec->Get(i);
+      const RSP::MetadataEntry *m_ptr = metadata_vec->Get(i);
       if (!m_ptr) continue;  // <--- check for nullptr
       if (!first) os << ", ";
       os << *m_ptr;  // safe dereference
