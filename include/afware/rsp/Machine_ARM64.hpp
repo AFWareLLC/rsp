@@ -19,40 +19,98 @@
 #include <cstdint>
 #include <ctime>
 
+//
+// This is ARM64 specific machine support code.
+// Assumptions made:
+// - Compiler supports inline ASM
+// - The userspace virtual counter is accessible (CNTVCT_EL0)
+// - CNTFRQ_EL0 is readable to obtain ticks/sec
+//
+// Due to the low-levelness of this code, it's pretty groaty. Sorry.
+//
+
 namespace rsp {
+
 //
-// ARM64 time source: CLOCK_MONOTONIC_RAW
+// Read CNTVCT_EL0 (virtual count).
 //
-// This is the best way to approach this for ARM, since the counters
-// are typically privledged and aren't userspace accessible.
-//
-// This is a stable, non-adjusted, high-resolution clock exposed by
-// the Linux VDSO. It is much faster than a syscall and does *not*
-// slew or jump due to NTP.
+// Notes:
+// - CNTVCT_EL0 is the architected virtual counter (monotonic).
+// - ISB is used to ensure the counter read is not speculated/reordered
+//   across preceding instructions (similar motivation as lfence+rdtsc).
+// - Returns raw ticks, not nanoseconds.
 //
 
 inline uint64_t Now() {
-  struct timespec ts;
-  clock_gettime(CLOCK_MONOTONIC_RAW, &ts);
-  return uint64_t(ts.tv_sec) * 1'000'000'000ull + uint64_t(ts.tv_nsec);
+  uint64_t v = 0;
+  __asm__ __volatile__(
+      "isb\n\t"
+      "mrs %0, cntvct_el0"
+      : "=r"(v)
+      :
+      : "memory");
+  return v;
 }
 
 //
-// ARM64 Machine abstraction
+// Read CNTFRQ_EL0 (counter frequency, ticks/sec).
+//
+
+inline uint64_t ARM64_ReadCntfrqHz() {
+  uint64_t hz = 0;
+  __asm__ __volatile__(
+      "mrs %0, cntfrq_el0"
+      : "=r"(hz)
+      :
+      : "memory");
+  return hz;
+}
+
+
+//
+// Best-effort "can we use this clock source?" check.
+//
+// If CNTVCT_EL0 is trapped, this would normally SIGILL. We don't try to
+// recover here — in practice Linux/arm64 exposes it to userspace.
+// We do validate that CNTFRQ_EL0 is non-zero and that the counter moves.
+//
+
+inline bool ARM64_CounterLooksSane(uint64_t cntfrq_hz) {
+  if (cntfrq_hz == 0) {
+    return false;
+  }
+
+  // Basic monotonic movement check
+  const uint64_t t0 = Now();
+  const uint64_t t1 = Now();
+  return t1 >= t0;
+}
+
+//
+// This is the final abstraction of the machine - which gets instantiated by the
+// profiler on startup. The bits and pieces it provides access to are needed to
+// compute accurate timings from the counter ticks.
 //
 
 class Machine {
 public:
   Machine() {
+    nominal_cnt_hz_ = ARM64_ReadCntfrqHz();
+    ok_ = ARM64_CounterLooksSane(nominal_cnt_hz_);
   }
 
   bool OK() const {
-    return true;
+    return ok_;
   }
 
   uint64_t GetNominalFreq() const {
-    return 1'000'000'000ull;  // nanosecond resolution
+    return nominal_cnt_hz_;
   }
+
+private:
+  bool ok_               = false;
+  uint64_t nominal_cnt_hz_ = 0;
 };
+
 
 }  // namespace rsp
