@@ -20,8 +20,15 @@
 
 #include <array>
 #include <cstring>
+#include <type_traits>
 
 namespace rsp {
+namespace detail {
+
+template <class>
+inline constexpr bool always_false_v = false;
+
+}  // namespace detail
 
 //
 // Scope metadata.
@@ -144,6 +151,57 @@ inline MetadataEntry MakeScopeMetadata<double>(MetadataTag tag, double val) {
   MetadataEntry entry{tag, MetadataType::DOUBLE};
   std::memcpy(entry.data.data(), &val, sizeof(double));
   return entry;
+}
+
+//
+// We add a default template and route accordingly. This is mainly for
+// macOS as there's some additional fun and games due to how
+// unsigned long etc is defined.
+//
+
+template <typename T>
+inline MetadataEntry MakeScopeMetadata(MetadataTag tag, T val) {
+  using U = std::remove_cv_t<std::remove_reference_t<T>>;
+
+  if constexpr (std::is_same_v<U, bool>) {
+    return MakeScopeMetadata<uint8_t>(tag, static_cast<uint8_t>(val ? 1 : 0));
+  } else if constexpr (std::is_same_v<U, uint8_t> || std::is_same_v<U, int8_t> || std::is_same_v<U, uint16_t> ||
+                       std::is_same_v<U, int16_t> || std::is_same_v<U, uint32_t> || std::is_same_v<U, int32_t> ||
+                       std::is_same_v<U, uint64_t> || std::is_same_v<U, int64_t> || std::is_same_v<U, float> ||
+                       std::is_same_v<U, double>) {
+    return MakeScopeMetadata<U>(tag, val);
+  } else if constexpr (std::is_enum_v<U>) {
+    using E = std::underlying_type_t<U>;
+    return MakeScopeMetadata<E>(tag, static_cast<E>(val));
+  } else if constexpr (std::is_integral_v<U>) {
+    if constexpr (sizeof(U) == 1) {
+      if constexpr (std::is_signed_v<U>)
+        return MakeScopeMetadata<int8_t>(tag, static_cast<int8_t>(val));
+      else
+        return MakeScopeMetadata<uint8_t>(tag, static_cast<uint8_t>(val));
+    } else if constexpr (sizeof(U) == 2) {
+      if constexpr (std::is_signed_v<U>)
+        return MakeScopeMetadata<int16_t>(tag, static_cast<int16_t>(val));
+      else
+        return MakeScopeMetadata<uint16_t>(tag, static_cast<uint16_t>(val));
+    } else if constexpr (sizeof(U) == 4) {
+      if constexpr (std::is_signed_v<U>)
+        return MakeScopeMetadata<int32_t>(tag, static_cast<int32_t>(val));
+      else
+        return MakeScopeMetadata<uint32_t>(tag, static_cast<uint32_t>(val));
+    } else if constexpr (sizeof(U) == 8) {
+      if constexpr (std::is_signed_v<U>)
+        return MakeScopeMetadata<int64_t>(tag, static_cast<int64_t>(val));
+      else
+        return MakeScopeMetadata<uint64_t>(tag, static_cast<uint64_t>(val));
+    } else {
+      static_assert(detail::always_false_v<U>, "MakeScopeMetadata: unsupported integral size");
+    }
+  }
+
+  else {
+    static_assert(detail::always_false_v<U>, "MakeScopeMetadata: unsupported type T");
+  }
 }
 
 }  // namespace rsp
