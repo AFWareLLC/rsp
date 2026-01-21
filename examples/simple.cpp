@@ -14,6 +14,14 @@
 //
 // Pay attention to the print ordering.
 //
+// Lastly, we demonstrate RSP_FUNCTION_SCOPE, which creates a scope for
+// the entire function and names it accordingly.
+//
+
+void MyFunction() {
+  RSP_FUNCTION_SCOPE;
+  RSP_SCOPE_METADATA("Some function value", std::uint8_t{1});
+}
 
 int main() {
   if (rsp::Available()) {
@@ -43,6 +51,8 @@ int main() {
 
     RSP_SCOPE_METADATA("Some value 1", std::uint8_t{255});
   }
+
+  MyFunction();
 
   rsp::Stop();
 
