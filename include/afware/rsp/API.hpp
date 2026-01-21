@@ -26,6 +26,7 @@
 
 #define RSP_SCOPE RSP_SCOPE_IMPL
 #define RSP_SCOPE_METADATA RSP_SCOPE_METADATA_IMPL
+#define RSP_FUNCTION_SCOPE RSP_FUNCTION_SCOPE_IMPL
 
 namespace rsp {
 
@@ -47,6 +48,7 @@ inline void Stop() {
 
 #define RSP_SCOPE(name) ((void)0)
 #define RSP_SCOPE_METADATA(tag, val) ((void)0)
+#define RSP_FUNCTION_SCOPE ((void)0)
 
 namespace rsp {
 

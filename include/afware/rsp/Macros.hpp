@@ -16,6 +16,17 @@
 
 #pragma once
 
+#include <source_location>
+
+namespace rsp {
+
+[[nodiscard]] inline constexpr const char *current_function(
+    const std::source_location &loc = std::source_location::current()) noexcept {
+  return loc.function_name();
+}
+
+}  // namespace rsp
+
 #define RSP_CONCAT_IMPL(a, b) a##b
 #define RSP_CONCAT(a, b) RSP_CONCAT_IMPL(a, b)
 
@@ -28,3 +39,5 @@
       current->info.AddMetadata(::rsp::MetadataTag(TAG_STR), VALUE); \
     }                                                                \
   } while (0)
+
+#define RSP_FUNCTION_SCOPE_IMPL RSP_SCOPE_IMPL(::rsp::current_function());
