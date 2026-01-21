@@ -20,12 +20,12 @@
 
 namespace rsp {
 
-[[nodiscard]] inline constexpr const char* current_function(
-    const std::source_location& loc = std::source_location::current()) noexcept {
-    return loc.function_name();
+[[nodiscard]] inline constexpr const char *current_function(
+    const std::source_location &loc = std::source_location::current()) noexcept {
+  return loc.function_name();
 }
 
-} // namespace rsp
+}  // namespace rsp
 
 #define RSP_CONCAT_IMPL(a, b) a##b
 #define RSP_CONCAT(a, b) RSP_CONCAT_IMPL(a, b)
