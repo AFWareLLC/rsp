@@ -5,10 +5,10 @@ more that still needs to come across from our internal repo, but this is a prett
 
 ## Building
 
-To build it: `./build_cli.sh` (for Linux, macOS) or
-`.\build_cli_nt.bat` (for Windows) from the top-level directory. You
-need to have a `golang` toolchain available and on `$PATH`.  The `go`
-build will bring in any dependencies that are needed.
+To build it: `./build_cli.sh` (for Linux, macOS)
+
+If you don't have go installed, you can use our `nix` environment (see
+the top-level `README.md` for more info).
 
 The nice thing about the `go` binary is that it's portable: you can
 build it once and copy it to different machines as needed without

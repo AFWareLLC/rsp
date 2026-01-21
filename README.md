@@ -48,12 +48,30 @@ built with some  common analysis functions. See `cli/README.md`.
 
 - AMD64 CPU with invariant TSC. We do not support "varying" TSCs - this should not be
   an issue for most modern chips.
-- ARM64 chip. We use the CLOCK_MONOTONIC_RAW as the time source, as the hardware
-  counters are typically not readable from userspace.
+- ARM64 chip with access to `cnvct_el0` and `cntfrq_el0` instructions
 - Recent compiler supporting modern C++ standards (clang 18 or newer is recommended, as is `-std=c++23`, but `-std=c++17` works).
-- (For now) Linux only
-- `#include <flatbuffers/flatbuffers.h>` is needed, but `flatc` is only needed if you change the format definitions. You might
-   need to recompile the flatbuffer schema to match your version fo flatbuffers: see `build_flatbuffers.sh`. The version of Flatbuffers in use by us is `25.2.10` but any recent version should be OK.
+- Linux or macOS (macOS support is limited to Apple Sillicon)
+
+## Toolchain Info
+
+We use a `nix` flake to bring in our dependencies, and
+toolchain. However, this isn't actually needed - if your host system
+has the binaries and libraries available, this is ok. To use our
+toolchain, setup `nix` and then run `nix develop` - this will ensure
+our toolchain is on `$PATH` and usable.
+
+The assumptions made by our example scripts are that `clang++` and
+`flatc` are on `$PATH` - if your system has these already you can just
+use those.
+
+The only external dependency needed for the profiler is Flatbuffers -
+which is brought in by `nix` in our environment (specifically, version
+25.9.23). However, there's nothing specific that requires use of that
+version - any recent version will suffice.
+
+However, you *will* need to rebuild the generated headers to suit a
+different version of Flatbuffers. Our `build_flatbuffers.sh` script
+will take care of that for both the profiler and the CLI tools.
 
 ## A brief introduction
 
@@ -175,6 +193,19 @@ Each scope contains the following elements:
 Post-aggregation, these tick-deltas can be combined with the detected nominal clock rate and converted into timings.
 
 The metadata is tagged with a key, and the value can be of a number of types: 8, 16, 32 or 64 bit ints (signed and unsigned), float or double.
+
+We also offer a convenience macro to create a scope at function level:
+
+```
+void MyFunction() {
+	RSP_FUNCTION_SCOPE;
+}
+```
+
+This works identically to a regular scope (in terms of attaching
+metadata), and will be named according to the
+`std::source_location().function_name()` (in this case, the scope will
+be named `void MyFunction()`).
 
 For illustrative examples it is recommended that the user reviews the following examples:
 
