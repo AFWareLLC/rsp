@@ -47,14 +47,14 @@ func PercentilesForScope(filename string, scope string) {
 
 	t := table.NewWriter()
 	t.SetOutputMirror(os.Stdout)
-	t.AppendHeader(table.Row{"p50", "p95", "p99"})
+	t.AppendHeader(table.Row{"p50 (ms)", "p95 (ms)", "p99 (ms)"})
 	t.AppendRow(table.Row{p50, p95, p99})
 	t.Render()
 }
 
 var PercentilesOnlyCommand = &cli.Command{
 	Name:      "percentiles",
-	Usage:     "Print p50, p95 and p99 for a given scope",
+	Usage:     "Print p50, p95 and p99 for a given scope in milliseconds.",
 	ArgsUsage: "<filename> <scope>",
 	Action: func(c *cli.Context) error {
 		if c.Args().Len() < 2 {
