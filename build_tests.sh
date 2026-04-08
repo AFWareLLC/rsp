@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+flatc --cpp -o include/afware/rsp ./schema/scope_info.fbs
+
 mkdir -p bin
 
 CXXFLAGS="-std=c++23 -Wall -Wextra -pedantic -Iinclude/ -DRSP_ENABLE"
