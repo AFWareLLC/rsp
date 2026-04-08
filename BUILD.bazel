@@ -1,23 +1,19 @@
-genrule(
-    name = "scope_info_generated",
+load("@flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
+
+flatbuffer_cc_library(
+    name = "scope_info_fbs",
     srcs = ["schema/scope_info.fbs"],
-    outs = ["scope_info_generated.h"],
-    cmd = "$(location @flatbuffers//:flatc) --cpp -o $(RULEDIR) $(location schema/scope_info.fbs)",
-    tools = ["@flatbuffers//:flatc"],
+    flatc_args = [],
 )
 
 cc_library(
     name = "rsp",
-    hdrs = glob(["include/afware/rsp/**/*.hpp"]) + [
-        ":scope_info_generated",
-    ],
-    # The vendored moodycamel headers are .h files.
+    hdrs = glob(["include/afware/rsp/**/*.hpp"]),
     textual_hdrs = glob(["include/afware/rsp/third_party/*.h"]),
     includes = ["include"],
-    # The genrule output lands in $(RULEDIR), which Bazel adds to the
-    # include path automatically. Serialization.hpp includes
-    # "scope_info_generated.h" as a relative path, so we need the
-    # genrule output directory on the search path too.
-    deps = ["@flatbuffers"],
+    deps = [
+        ":scope_info_fbs",
+        "@flatbuffers",
+    ],
     visibility = ["//visibility:public"],
 )
