@@ -1,0 +1,50 @@
+cc_binary(
+    name = "simple",
+    srcs = ["simple.cpp"],
+    defines = ["RSP_ENABLE"],
+    deps = ["//:rsp"],
+)
+
+cc_binary(
+    name = "threaded",
+    srcs = ["threaded.cpp"],
+    defines = ["RSP_ENABLE"],
+    deps = ["//:rsp"],
+)
+
+cc_binary(
+    name = "disk_producer",
+    srcs = ["disk_producer.cpp"],
+    defines = ["RSP_ENABLE"],
+    deps = ["//:rsp"],
+)
+
+cc_binary(
+    name = "disk_consumer",
+    srcs = ["disk_consumer.cpp"],
+    defines = ["RSP_ENABLE"],
+    deps = ["//:rsp"],
+)
+
+cc_binary(
+    name = "speedtest",
+    srcs = ["speedtest.cpp"],
+    copts = [
+        "-O3",
+        "-march=native",
+        "-mtune=native",
+    ],
+    defines = ["RSP_ENABLE"],
+    deps = ["//:rsp"],
+)
+
+cc_binary(
+    name = "speedtest_no_profiler",
+    srcs = ["speedtest.cpp"],
+    copts = [
+        "-O3",
+        "-march=native",
+        "-mtune=native",
+    ],
+    deps = ["//:rsp"],
+)

@@ -1,0 +1,7 @@
+module(
+    name = "rsp",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "flatbuffers", version = "25.12.19")
+bazel_dep(name = "googletest", version = "1.17.0.bcr.2")

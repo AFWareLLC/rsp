@@ -358,3 +358,10 @@ bin/rsp_tests_disabled
 include/afware/rsp/scope_info_generated.h
 cli/RSP/
 CLAUDE.md
+
+### Bazel ###
+bazel-bin
+bazel-out
+bazel-rsp
+bazel-testlogs
+MODULE.bazel.lock

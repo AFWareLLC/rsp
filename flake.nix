@@ -32,6 +32,8 @@
           flatbuffers
           gtest
           go
+          bazel-buildtools
+          bazelisk
           alejandra
           statix
           deadnix
