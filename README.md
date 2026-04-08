@@ -73,6 +73,63 @@ However, you *will* need to rebuild the generated headers to suit a
 different version of Flatbuffers. Our `build_flatbuffers.sh` script
 will take care of that for both the profiler and the CLI tools.
 
+## Building with Bazel
+
+The C++ library can also be built with [Bazel](https://bazel.build/),
+which makes it straightforward to integrate into larger Bazel-based
+projects. The Go CLI is not built with Bazel; use `build_cli.sh` for
+that.
+
+### Using RSP as a dependency
+
+Add RSP to your project's `MODULE.bazel`:
+
+```
+bazel_dep(name = "rsp", version = "...")
+```
+
+Then depend on `//:rsp` in your BUILD files:
+
+```
+cc_binary(
+    name = "my_app",
+    srcs = ["main.cpp"],
+    defines = ["RSP_ENABLE"],
+    deps = ["@rsp//:rsp"],
+)
+```
+
+### Building locally
+
+If using the Nix flake, `bazelisk` is provided automatically. Otherwise,
+install [Bazelisk](https://github.com/bazelbuild/bazelisk) or a compatible
+Bazel version (see `.bazelversion`) via your system package manager.
+
+```
+# Build the library
+bazelisk build //:rsp
+
+# Build all examples
+bazelisk build //examples/...
+
+# Run all tests
+bazelisk test //tests/...
+```
+
+### Bazel targets
+
+| Target | Description |
+|---|---|
+| `//:rsp` | The header-only C++ library |
+| `//examples:simple` | Basic usage example |
+| `//examples:threaded` | Multi-threaded example |
+| `//examples:disk_producer` | Writes profiling data to disk |
+| `//examples:disk_consumer` | Reads profiling data from disk |
+| `//examples:speedtest` | Performance benchmark (with profiling) |
+| `//examples:speedtest_no_profiler` | Performance benchmark (without profiling) |
+| `//tests:rsp_tests` | Main test suite (with `RSP_ENABLE`) |
+| `//tests:rsp_tests_disabled` | API tests without `RSP_ENABLE` |
+
 ## A brief introduction
 
 To use the profiler in your codebase, two steps are required.

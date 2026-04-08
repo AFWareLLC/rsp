@@ -1,0 +1,19 @@
+load("@flatbuffers//:build_defs.bzl", "flatbuffer_cc_library")
+
+flatbuffer_cc_library(
+    name = "scope_info_fbs",
+    srcs = ["schema/scope_info.fbs"],
+    flatc_args = [],
+)
+
+cc_library(
+    name = "rsp",
+    hdrs = glob(["include/afware/rsp/**/*.hpp"]),
+    textual_hdrs = glob(["include/afware/rsp/third_party/*.h"]),
+    includes = ["include"],
+    deps = [
+        ":scope_info_fbs",
+        "@flatbuffers",
+    ],
+    visibility = ["//visibility:public"],
+)
