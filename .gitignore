@@ -355,4 +355,6 @@ bin/disk_producer
 bin/rsp
 bin/rsp_tests
 bin/rsp_tests_disabled
+include/afware/rsp/scope_info_generated.h
+cli/RSP/
 CLAUDE.md

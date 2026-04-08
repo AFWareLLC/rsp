@@ -1,4 +1,7 @@
 #!/bin/bash
+set -e
+
+flatc --cpp -o include/afware/rsp ./schema/scope_info.fbs
 
 # Delete generated test data
 rm -rf /tmp/rsp_example.bin
