@@ -217,6 +217,63 @@ For illustrative examples it is recommended that the user reviews the following 
 
 These examples can be built by running `build_examples.sh` (assuming you have clang installed).
 
+## Testing
+
+RSP includes a comprehensive test suite built with [Google Test](https://github.com/google/googletest).
+
+### Building and Running Tests
+
+If using the Nix toolchain (`nix develop`), Google Test is provided automatically:
+
+```
+./build_tests.sh
+```
+
+This will:
+1. Build the main test binary (`bin/rsp_tests`) with `RSP_ENABLE` defined
+2. Build the disabled-API test binary (`bin/rsp_tests_disabled`) without `RSP_ENABLE`
+3. Run both binaries
+
+To run individual tests or filter by name:
+
+```
+./bin/rsp_tests --gtest_filter='Metadata*'
+./bin/rsp_tests --gtest_filter='Threading.*'
+```
+
+### Test Structure
+
+Tests are organized by component in `tests/`:
+
+- `test_constexpr_string.cpp` - ConstexprString construction, truncation, null termination
+- `test_metadata.cpp` - MakeScopeMetadata for all types, boundary values, enums, bools
+- `test_slots.cpp` - MetadataSlot and MetadataSlotStorage: acquire/release, expansion, thread safety
+- `test_scope_info.cpp` - ScopeInfo construction, metadata attachment, streaming
+- `test_scope_manager.cpp` - ScopeManager stack operations, thread locality
+- `test_machine.cpp` - Machine detection, Now() monotonicity, platform-specific checks
+- `test_serialization.cpp` - FlatBuffer serialization roundtrips for all types
+- `test_sinks.cpp` - BinaryDiskSink write/read verification, append mode
+- `test_profiler.cpp` - Singleton, Ready(), sink configuration, slot storage
+- `test_active_scope.cpp` - ActiveScope timing, nesting, RSP_SCOPE/RSP_SCOPE_METADATA/RSP_FUNCTION_SCOPE macros
+- `test_api_enabled.cpp` - API surface with RSP_ENABLE
+- `test_api_disabled.cpp` - API surface without RSP_ENABLE (separate binary)
+- `test_integration.cpp` - End-to-end pipeline: scope creation through serialization to disk and deserialization
+- `test_threading.cpp` - Concurrent scope creation, thread-local isolation, stress testing
+
+### Without Nix
+
+If not using Nix, ensure `gtest` headers and libraries are available on your system, then:
+
+```
+clang++ -std=c++23 -Wall -Wextra -pedantic -Iinclude/ -DRSP_ENABLE \
+    tests/profiler_test_env.cpp tests/test_*.cpp \
+    -lgtest -lgtest_main -lpthread -o bin/rsp_tests
+
+# Exclude test_api_disabled.cpp from the above and compile separately:
+clang++ -std=c++23 -Wall -Wextra -pedantic -Iinclude/ \
+    tests/test_api_disabled.cpp \
+    -lgtest -lgtest_main -lpthread -o bin/rsp_tests_disabled
+```
 
 ## Performance Footprint
 

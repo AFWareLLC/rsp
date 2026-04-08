@@ -30,6 +30,7 @@
           clang
           clang-tools
           flatbuffers
+          gtest
           go
           alejandra
           statix

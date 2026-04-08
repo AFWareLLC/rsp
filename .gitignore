@@ -353,3 +353,6 @@ bin/simple
 bin/disk_consumer
 bin/disk_producer
 bin/rsp
+bin/rsp_tests
+bin/rsp_tests_disabled
+CLAUDE.md
